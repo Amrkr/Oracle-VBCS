@@ -1,0 +1,3 @@
+View: HTML/CSS
+View Model: Binds View & Model together (logic to represent the data on view)
+Model: Data + Business Logic
