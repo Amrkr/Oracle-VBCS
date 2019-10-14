@@ -1,0 +1,34 @@
+function Account(a, b, c){
+    this.x = a;
+    this.y = b;
+    this.z = c;
+}
+
+function abc(param){
+    this.aa = param.x;
+    this.bb = param.y;
+}
+
+var param = new Account(10, 'A', 15);
+
+param.x
+10
+var param2 = new Account(20, 'A', 15);
+
+param2.x
+20
+
+abc(param);
+
+abc.aa
+
+var n = new abc(param);
+
+n.aa
+10
+
+n.bb
+"A"
+
+n.aa + n.bb
+"10A"
