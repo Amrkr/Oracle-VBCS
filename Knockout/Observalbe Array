@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="knockout-3.5.0.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#btnShowDetails").click(function () {
+                //getting the view model value(for normal attribute and observable)
+                alert(accViewModel.Id + " " + accViewModel.Balance());
+                //setting the View model value
+                accViewModel.Balance(5000);
+            });
+
+            $("#btnDeposit").click(function () {
+                //set the new balance. Previous bal + new balance
+                accViewModel.Balance(accViewModel.Balance() + Number($("#txtAmount").val()));
+            });
+
+            $("#btnAddAccount").click(function () {
+                var acc = new Account($("#txtNewId").val(), $("#txtNewName").val(), $("#txtNewBalance").val());
+                accViewModel.Accounts.push(acc);
+                alert(accViewModel.Accounts().length);
+            });
+
+            $("#btnPopAccount").click(function () {
+                accViewModel.Accounts.pop();
+            });
+
+            $("#ddlAccounts").change(function () {
+                // get selected index of drop down
+                var selIndex = document.getElementById("ddlAccounts").selectedIndex;
+                accViewModel.SelectedAccountIndex(selIndex);
+            })
+        })
+    </script>
+</head>
+<body>
+
+    <!--View-->
+    <!--Drop down-->
+    Account's Id:
+    <select id="ddlAccounts" data-bind="options: Accounts, optionsText: 'Id', optionsValue: 'Id'"></select>
+    Total number of Accounts: <span data-bind="text: Accounts().length"></span>
+
+    <hr />
+
+    <h2>Selected Account Details</h2>
+    Id: <span data-bind="text: Accounts()[SelectedAccountIndex()].Id"></span><br />
+    Name: <span data-bind="text: Accounts()[SelectedAccountIndex()].Name"></span><br />
+
+    Amount: <span data-bind="text: Accounts()[SelectedAccountIndex()].Balance"></span><br />
+    <hr />
+    New Balance: <input type="text" data-bind="value: Balance" onchange="BalanceChanged(this)" />
+
+
+    <input type="button" id="btnShowDetails" value="Show Details" />
+    <hr />
+    <input type="number" name="name" value="" id="txtAmount" />
+    <input type="button" id="btnDeposit" value="Deposit" />
+
+    <hr />
+    New Id: <input type="text" id="txtNewId" name="name" value="" /><br />
+    New Name: <input type="text" id="txtNewName" name="name" value="" /><br />
+    New Balance: <input type="text" id="txtNewBalance" name="name" value="" /><br />
+
+    <input type="button" id="btnAddAccount" value="Add Account" />
+    <input type="button" id="btnPopAccount" value="Pop Account" />
+
+    <script>
+        // Model
+        function Account(id, name, balance) {
+            this.Id = id;
+            this.Name = name;
+            this.Balance = balance;
+        }
+
+        // View Model
+        function AccountViewModel(acc) {
+            this.Id = (acc.Id);
+            this.Name = (acc.Name);
+            this.Balance = ko.observable(acc.Balance);
+
+            var a1 = new Account(1, "A1", 10000);
+            var a2 = new Account(2, "A3", 20000);
+            var a3 = new Account(3, "A3", 30000);
+
+            this.Accounts = ko.observableArray([a1, a2, a3]);
+            this.SelectedAccountIndex = ko.observable(0);
+
+        }
+
+        function BalanceChanged(bal) {
+            alert("New Balance " + bal.value);
+        }
+
+        var acc = new Account(1, "A1", 1000);
+        var accViewModel = new AccountViewModel(acc);
+        ko.applyBindings(accViewModel);
+    </script>
+</body>
+</html>
