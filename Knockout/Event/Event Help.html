@@ -1,0 +1,10 @@
+Other than click event, use 'event' binding for all.
+
+<div data-bind="event: {mouseover: enableDetails, mouseout: disableDetails}">
+Mouse over me
+</div>
+
+this.enableDetails = function(){
+$("#divBox").css("border", 1px solid red")
+}
+
