@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="knockout-3.5.0.js"></script>
+    <style>
+        .selected{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+
+        <tbody data-bind="foreach: Accounts">
+            <tr>
+                <td data-bind="text: $index()+1"></td>
+                <td data-bind="text: Id"></td>
+                <td data-bind="text: Name"></td>
+                <td data-bind="text: Balance"></td>
+                <td>
+                    <ul data-bind="foreach: Deposits">
+                        <li data-bind="text: $data"></li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+    <!--same as above-->
+    <table data-bind="foreach: Accounts">
+        <tr>
+            <td data-bind="text: $index"></td>
+            <td data-bind="text: $data.Id"></td>
+            <td data-bind="text: $data.Name"></td>
+            <td data-bind="text: $data.Balance"></td>
+            <td>
+                <ul data-bind="foreach: {data: Deposits, as: 'Amount'}">
+                    <li data-bind="text: Amount"></li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <!--same as above-->   <hr />
+    <table data-bind="foreach: {data: Accounts, as: 'Account'}">
+        <tr data-bind="css: {selected: (Account.Id == ($parent.SelectedAccount() == null ? -1 : $parent.SelectedAccount().Id))}">
+            <td data-bind="text: (($index() + 1) + '/' + $parent.Count())"></td>
+            <td data-bind="text: Account.Id"></td>
+            <td data-bind="text: Account.Name"></td>
+            <td data-bind="text: Account.Balance"></td>
+            <td><button data-bind="click: $parent.SelectAccount">Select</button></td>
+
+        </tr>
+    </table>
+
+    <input type="number" data-bind="value: AmountToTransact"/>
+    <button data-bind="click: Deposit">Deposit</button>
+    <button data-bind="click: function(data){ Withdraw(500) }">Withdraw</button>
+
+    <script>
+        // model
+        function Account(id, name, balance, deposits) {
+            this.Id = id;
+            this.Name = name;
+            this.Balance = ko.observable(balance);
+            this.Deposits = deposits;
+        }
+
+        //view model
+        var myAccountViewModel = new function () {
+            var current = this;
+
+            this.SelectedAccount = ko.observable(null);
+            this.Accounts = ko.observableArray([
+                new Account(1, 'A1', 1000),
+                new Account(2, 'A2', 2000),
+                new Account(3, 'A3', 3000),
+                new Account(4, 'A4', 4000),
+                new Account(5, 'A5', 5000)
+            ]);
+
+            this.Count = ko.computed(function () {
+                return this.Accounts().length;
+            }, this);
+
+            this.SelectAccount = function (account) {
+                current.SelectedAccount(account);
+                //alert(account.Name);
+            }
+
+            this.AmountToTransact = ko.observable(0);
+
+            this.Deposit = function () {
+                //alert('depositing');
+                this.SelectedAccount().Balance(Number(this.SelectedAccount().Balance()) + Number(this.AmountToTransact()));
+            }
+
+            this.Withdraw = function (minAmount) {
+                if (this.SelectedAccount().Balance() - Number(this.AmountToTransact()) < Number(minAmount))
+                    alert('Insufficient Balance');
+                else
+                    this.SelectedAccount().Balance(Number(this.SelectedAccount().Balance()) - Number(this.AmountToTransact()));
+            }
+        }
+
+        ko.applyBindings(myAccountViewModel);
+    </script>
+</body>
+</html>
