@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="knockout-3.5.0.js"></script>
+</head>
+<body>
+    <!--textInput/value binding--><!--hasfocus binding-->
+    <input data-bind="textInput: prop1, hasfocus: T1HasFocus" /><br />
+    <input data-bind="value: prop2" /><br />
+
+    <span data-bind="text: (prop1() + ' ' + prop2())"></span>
+    <input type="button" data-bind="click: SetFocus" value="Set Focus" />
+
+    <!--bind multiple checkboxes with a single observable string array-->
+    <!--<input type="checkbox" value="1" data-bind="checked: DemoArray" />1
+    <input type="checkbox" value="2" data-bind="checked: DemoArray" />2
+    <input type="checkbox" value="3" data-bind="checked: DemoArray" />3
+    <input type="checkbox" value="4" data-bind="checked: DemoArray" />4
+    <input type="checkbox" value="5" data-bind="checked: DemoArray" />5
+    <input type="checkbox" value="6" data-bind="checked: DemoArray" />6
+    <input type="checkbox" value="7" data-bind="checked: DemoArray" />7
+    <input type="checkbox" value="8" data-bind="checked: DemoArray" />8
+    <input type="checkbox" value="9" data-bind="checked: DemoArray" />9
+    <input type="checkbox" value="10" data-bind="checked: DemoArray" />10
+    -->
+    <input type="checkbox" value="1" data-bind="checked: DemoArrayFiltered" />1
+    <input type="checkbox" value="2" data-bind="checked: DemoArrayFiltered" />2
+    <input type="checkbox" value="3" data-bind="checked: DemoArrayFiltered" />3
+    <input type="checkbox" value="4" data-bind="checked: DemoArrayFiltered" />4
+    <input type="checkbox" value="5" data-bind="checked: DemoArrayFiltered" />5
+    <input type="checkbox" value="6" data-bind="checked: DemoArrayFiltered" />6
+    <input type="checkbox" value="7" data-bind="checked: DemoArrayFiltered" />7
+    <input type="checkbox" value="8" data-bind="checked: DemoArrayFiltered" />8
+    <input type="checkbox" value="9" data-bind="checked: DemoArrayFiltered" />9
+    <input type="checkbox" value="10" data-bind="checked: DemoArrayFiltered" />10
+
+    <button onclick="alert(myAccountModel.DemoArray().join(' '))">Show Array</button>
+
+    <!--Multi selects-->
+    <select size="4" multiple="multiple" data-bind="options: DemoArray, selectedOptions: DemoArrayFiltered"></select>
+
+    <!--Drop down / select-->
+    <select data-bind="options: Departments, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Choose...'"></select>
+
+
+    <script type="text/javascript">
+        function Department(id, name) {
+            this.Id = id;
+            this.Name = name;
+        }
+
+        myAccountModel = new function AccountViewModel() {
+            this.prop1 = ko.observable("ABC");
+            this.prop2 = ko.observable("XYZ");
+
+            this.T1HasFocus = ko.observable(false);
+            this.SetFocus = function () {
+                this.T1HasFocus(true);
+            }
+
+            this.DemoArray = ko.observableArray(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+            this.DemoArrayFiltered = ko.observableArray(['1', '2', '3', '6', '7']);
+
+            this.Departments = ko.observableArray([new Department(1, 'D1'), new Department(2, 'D2')]);
+        }
+
+        ko.applyBindings(myAccountModel);
+    </script>
+
+</body>
+</html>
