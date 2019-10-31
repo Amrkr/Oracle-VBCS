@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="knockout-3.5.0.js"></script>
+</head>
+<body>
+    Name: <span data-bind="text: Name"></span><br /><hr />
+
+    Residence Address:
+    <div data-bind="template: {name: 'address-templ', data: ResidenceAddress}"></div>
+
+    <hr />
+    Office Address:
+    <div data-bind="template: {name: 'address-templ', data: OfficeAddress}"></div>
+
+    <!--Template-->
+    <script id="address-templ" type="text/html">
+        Street:
+        <span data-bind="text: Street"></span>
+        <br />
+        City:
+        <span data-bind="text: City"></span>
+        <br />
+        State:
+        <span data-bind="text: State"></span>
+    </script>
+
+    <script>
+        function Address(street, city, state) {
+            this.Street = street;
+            this.City = city;
+            this.State = state;
+        }
+
+        function PersonViewModel() {
+            this.Name = ko.observable("Abcd");
+            this.ResidenceAddress = new Address('RStreet', 'RCity', 'RState');
+            this.OfficeAddress = new Address('OStreet', 'OCity', 'OState');
+        }
+
+        ko.applyBindings(PersonViewModel);
+    </script>
+</body>
+</html>
